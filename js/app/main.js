@@ -10,7 +10,6 @@ viewService = (function ($) {
         return '<button class="sqr" id=col' + activeRow + activeCol + '></button>';
     };
 
-
     return {
 
         addButton: function (activeRow, activeCol) {
