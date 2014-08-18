@@ -46,9 +46,11 @@ var viewService = (function ($) {
             container.css('display', 'none');
             var lng = elemt.length;
             while (lng > 0) {
-                for (var col = 0; col < columns; col++) {
-                    this.addButton(activeRow, col + 1, elemt[lng - 1].name, handler);
+                //for (var col = 0; col < columns; col++)
+                while (lng > 0 && col < columns) {
+                    this.addButton(activeRow, col + 1, JSON.stringify(elemt[lng - 1]), handler);
                     lng--;
+                    col++;
                 }
                 activeRow++;
             }
@@ -107,6 +109,8 @@ var app = (function (view, data) {
 
             if (selectedIndex >= -1) {
                 var selectItem = this.getAttribute('item');
+
+
             }
 
             alert(selectItem);
