@@ -41,20 +41,26 @@ var viewService = (function ($) {
             }, timeOut);
         },
         drawGame: function (elemt, handler) {
-            var columns = 3, activeRow = 1;
+            var columns = 3, activeRow = 1, col;
             var container = $('.container-fluid');
             container.css('display', 'none');
-            var lng = elemt.length;
-            while (lng > 0) {
+            var lng = 0;
+            debugger;
+
+            while (lng < elemt.length) {
                 //for (var col = 0; col < columns; col++)
-                while (lng > 0 && col < columns) {
-                    this.addButton(activeRow, col + 1, JSON.stringify(elemt[lng - 1]), handler);
-                    lng--;
+                col = 0;
+                while (lng < elemt.length && col < columns) {
+                    debugger;
+                    this.addButton(activeRow, col + 1, lng, handler);
+                    lng++;
                     col++;
                 }
                 activeRow++;
             }
             container.css('display', '');
+        }, removeByItem: function (itemId) {
+            $('[item=' + itemId + ']').remove();
         }
     }
 })(jQuery);
@@ -106,14 +112,18 @@ var app = (function (view, data) {
         init: function () {
             view.drawGame(nEnteries, this.handler);
         }, handler: function (event) {
-
             if (selectedIndex >= -1) {
-                var selectItem = this.getAttribute('item');
-
-
+                selectedIndex = parseInt(this.getAttribute('item'));
+            } else {
+                var currIndex = parseInt(this.getAttribute('item'));
+                if (nEnteries[selectedIndex].name == nEnteries[currIndex].name) {
+                    view.removeByItem(selectedIndex);
+                    view.removeByItem(currIndex);
+                }
             }
 
             alert(selectItem);
         }
     }
 })(viewService, dataService);
+
