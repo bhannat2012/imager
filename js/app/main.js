@@ -28,13 +28,14 @@ var viewService = (function ($) {
             }
             var btn = $('#col' + activeRow + activeCol);
             if (btn.length == 0) {
-                btn = $(btnTemplate(activeRow, activeCol, [activeRow, activeCol].join('/'), tag)).appendTo(rowDiv);
+                //btn = $(btnTemplate(activeRow, activeCol, [activeRow, activeCol].join('/'), tag)).appendTo(rowDiv);
+                btn = $(btnTemplate(activeRow, activeCol, '', tag)).appendTo(rowDiv);
             }    // adding a button to selected row
             btn.on('click', handler);
             return btn;
         },
         showMsg: function (msg, timeOut) {
-            timeOut = timeOut || 2000;
+            timeOut = timeOut || 1500;
             $('.container-fluid').first().after(msgTemp(msg));
             setTimeout(function () {
                 $('.orngMsg').remove();
@@ -45,13 +46,13 @@ var viewService = (function ($) {
             var container = $('.container-fluid');
             container.css('display', 'none');
             var lng = 0;
-            debugger;
+//            debugger;
 
             while (lng < elemt.length) {
                 //for (var col = 0; col < columns; col++)
                 col = 0;
                 while (lng < elemt.length && col < columns) {
-                    debugger;
+  //                  debugger;
                     this.addButton(activeRow, col + 1, lng, handler);
                     lng++;
                     col++;
@@ -59,9 +60,10 @@ var viewService = (function ($) {
                 activeRow++;
             }
             container.css('display', '');
-        }, removeByItem: function (itemId) {
-            $('[item=' + itemId + ']').remove();
-        }
+        },
+        removeByItem: function (itemId) {
+            $('[item=' + itemId + ']').css('display','none');
+        }   
     }
 })(jQuery);
 
@@ -112,17 +114,30 @@ var app = (function (view, data) {
         init: function () {
             view.drawGame(nEnteries, this.handler);
         }, handler: function (event) {
-            if (selectedIndex >= -1) {
+            var el = jQuery(this) ;
+            if (selectedIndex == -1) {
                 selectedIndex = parseInt(this.getAttribute('item'));
-            } else {
+                el.text(nEnteries[selectedIndex].key);   
+            } else  {
                 var currIndex = parseInt(this.getAttribute('item'));
-                if (nEnteries[selectedIndex].name == nEnteries[currIndex].name) {
+                if ( (selectedIndex != currIndex) && (nEnteries[selectedIndex].name == nEnteries[currIndex].name)) {
                     view.removeByItem(selectedIndex);
                     view.removeByItem(currIndex);
+                    view.showMsg('Match Found');
+                }else {
+                     // reflap
+                     el.text(nEnteries[currIndex].key);
+                     var curI = selectedIndex;  
+                     setTimeout( function() {
+                            jQuery('[item=' + curI + ']').text('');  
+                            el.text('');
+                        },500);
+
                 }
+                selectedIndex = -1;
             }
 
-            alert(selectItem);
+          //  alert(selectItem);
         }
     }
 })(viewService, dataService);
